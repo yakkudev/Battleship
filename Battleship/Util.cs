@@ -15,16 +15,16 @@ namespace Battleship {
 		public static List<Vec> GetSurrounding(List<Vec> obj, bool doTrim = false) {
 			var positions = new List<Vec>();
 			foreach (var o in obj) {
-                foreach (var offset in surroundingOffsets) {
+				foreach (var offset in surroundingOffsets) {
 					positions.Add(o + offset);
-                }
+				}
 			}
 			if (doTrim) {
 				positions = positions.Distinct().ToList();
 			}
 
 			return positions;
-			
+
 		}
 
 
@@ -36,7 +36,7 @@ namespace Battleship {
 			return letter - 'a';
 		}
 
-		private static readonly Dictionary<char, ConsoleColor> colorMap = new Dictionary<char, ConsoleColor> {
+		public static readonly Dictionary<char, ConsoleColor> colorMap = new Dictionary<char, ConsoleColor> {
 			{'0', ConsoleColor.Black},
 			{'1', ConsoleColor.DarkBlue},
 			{'2', ConsoleColor.DarkGreen},
@@ -54,14 +54,13 @@ namespace Battleship {
 			{'d', ConsoleColor.Magenta},
 			{'e', ConsoleColor.Yellow},
 			{'f', ConsoleColor.White},
-
-			{'r', ConsoleColor.Black} // reset
 		};
 
 		public static ConsoleColor? GetConsoleColor(char c) {
 			if (colorMap.ContainsKey(c)) {
 				return colorMap[c];
 			}
+			if (c == 'r') return ConsoleColor.Black; // Reset
 			return null;
 		}
 
@@ -81,21 +80,21 @@ namespace Battleship {
 					Program.sw.Flush();
 					if (text[i] == '&') {
 						Console.ForegroundColor = (ConsoleColor)col;
-                        if (text[i + 1] == 'r') { // Reset color
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.BackgroundColor = ConsoleColor.Black;
-                        }
-                        i++;
-                        continue;
-                    } else if (text[i] == '%') {
+						if (text[i + 1] == 'r') { // Reset color
+							Console.ForegroundColor = ConsoleColor.White;
+							Console.BackgroundColor = ConsoleColor.Black;
+						}
+						i++;
+						continue;
+					} else if (text[i] == '%') {
 						Console.BackgroundColor = (ConsoleColor)col;
-                        if (text[i + 1] == 'r') { // Reset color
-                            Console.ForegroundColor = ConsoleColor.White;
-                            Console.BackgroundColor = ConsoleColor.Black;
-                        }
-                        i++;
-                        continue;
-                    }
+						if (text[i + 1] == 'r') { // Reset color
+							Console.ForegroundColor = ConsoleColor.White;
+							Console.BackgroundColor = ConsoleColor.Black;
+						}
+						i++;
+						continue;
+					}
 
 
 				}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Battleship {
 	internal class Ship {
@@ -21,7 +20,7 @@ namespace Battleship {
 		public Ship(Vec origin, int size, Vec direction) {
 			// cells = new List<Cell>(size); // doesn't work??
 			for (int i = 0; i < size; i++) {
-				cells.Add(new Cell());
+				cells.Add(new Cell(Cell.State.Ship));
 			}
 			this.origin = origin;
 			this.direction = direction;
@@ -57,8 +56,8 @@ namespace Battleship {
 		}
 
 		public List<Vec> GetCellPositions() {
-            List<Vec> positions = new List<Vec>();
-            for (int i = 0; i < cells.Count; i++) {
+			List<Vec> positions = new List<Vec>();
+			for (int i = 0; i < cells.Count; i++) {
 				positions.Add(origin + (direction * i));
 			}
 			return positions;

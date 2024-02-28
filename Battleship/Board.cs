@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace Battleship {
@@ -15,16 +14,19 @@ namespace Battleship {
 
 		public void Print() {
 			var str = new StringBuilder(" ");
+			//char color = (char)player.color; // TODO: get player color
+			char color = 'b';
+
 			// Write row of letter coordinates
 			for (int i = 0; i < width; i++) {
-				str.Append($" %b&0{Util.GetLetter(i)}");
+				str.Append($" %{color}&0{Util.GetLetter(i)}");
 			}
 
 			str.Append("\n&r");
 
-            for (int y = 0; y < height; y++) {
+			for (int y = 0; y < height; y++) {
 				// Write a coordinate number
-				str.Append($"%b&0{y} &r");
+				str.Append($"%{color}&0{y} &r");
 				for (int x = 0; x < width; x++) {
 					str.Append($"{CellAt(x, y).GetRender()} ");
 				}
@@ -32,7 +34,7 @@ namespace Battleship {
 			}
 
 			Util.WriteColored(str.ToString());
-        }
+		}
 
 		public void Reset() {
 			for (int i = 0; i < cells.GetLength(0); i++) {
@@ -50,38 +52,27 @@ namespace Battleship {
 			return CellAt(v.x, v.y);
 		}
 
-		public void BuildCells(bool full = true) {
-			// Reset cells
-			for (int y = 0; y < height; y++) {
-				for (int x = 0; x < width; x++) {
-					CellAt(x, y).isHighlighted = false;
-					// Clear only if full build
-                    if (full) CellAt(x, y).state = Cell.State.None;
+		public void BuildCells() {
+			// Add ship positions
+			List<Vec> positions = new List<Vec>();
+			foreach (var s in ships) {
+				positions = s.GetCellPositions();
+				for (int i = 0; i < positions.Count; i++) {
+					cells[positions[i].y, positions[i].x] = s.GetCell(i);
 				}
 			}
-
-            foreach (var h in highlights) {
-				if (IsPosOnBoard(h))
-					cells[h.y, h.x].isHighlighted = true;
-            }
-
-            if (full) {
-				// Add ship positions
-				List<Vec> positions = new List<Vec>();
-				foreach (var s in ships) {
-					positions = s.GetCellPositions();
-                    for (int i = 0; i < positions.Count; i++){
-						cells[positions[i].y, positions[i].x] = s.GetCell(i);
-                    }
-				}
-			}
-        }
+		}
 
 		public void HighlightCell(Vec v) {
+			if (!IsPosOnBoard(v)) return;
+			cells[v.y, v.x].isHighlighted = true;
 			highlights.Add(v);
 		}
 
 		public void ClearHighlights() {
+			foreach (var v in highlights) {
+				CellAt(v).isHighlighted = false;
+			}
 			highlights.Clear();
 		}
 
@@ -93,15 +84,14 @@ namespace Battleship {
 		}
 
 		public bool IsPositionTouching(Vec v) {
-			if (!IsPosOnBoard(v)) return false; 
-			if (CellAt(v.x,v.y).state != Cell.State.None) return true;
+			if (!IsPosOnBoard(v)) return false;
+			if (CellAt(v.x, v.y).state != Cell.State.None) return true;
 			return false;
 		}
 
-		public bool AddShip(Ship s){
+		public bool AddShip(Ship s) {
 			var positions = s.GetCellPositions();
-			foreach (var pos in positions)
-			{
+			foreach (var pos in positions) {
 				if (!IsPosOnBoard(pos))
 					return false;
 

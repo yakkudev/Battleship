@@ -9,22 +9,19 @@ namespace Battleship {
 			this.y = y;
 		}
 
-		public static Vec Zero = new Vec(0, 0);
+		public static readonly Vec Zero = new Vec(0, 0);
 
-		public static Vec Up = new Vec(0, -1);
-		public static Vec Down = new Vec(0, 1);
-		public static Vec Left = new Vec(-1, 0);
-		public static Vec Right = new Vec(1, 0);
+		public static readonly Vec Up = new Vec(0, -1);
+		public static readonly Vec Down = new Vec(0, 1);
+		public static readonly Vec Left = new Vec(-1, 0);
+		public static readonly Vec Right = new Vec(1, 0);
 
 		public static Vec RotateAA(Vec v, bool left = false) {
-			// Ugly but works
-			Vec final = v;
-			if (v == Up) final = Right;
-			if (v == Right) final = Down;
-			if (v == Down) final = Left;
-			if (v == Left) final = Up;
-			if (left) return -final;
-			return final;
+			if (left) {
+				return new Vec(v.y, -v.x);
+			}
+			return -new Vec(v.y, -v.x);
+
 		}
 
 		public static Vec operator +(Vec a, Vec b) => new Vec(a.x + b.x, a.y + b.y);
