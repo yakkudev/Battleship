@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using yakkudev.Collections;
 
 namespace Battleship {
 	internal class Board {

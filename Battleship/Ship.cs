@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using yakkudev.Collections;
 
 namespace Battleship {
 	internal class Ship {
@@ -18,7 +19,6 @@ namespace Battleship {
 
 
 		public Ship(Vec origin, int size, Vec direction) {
-			// cells = new List<Cell>(size); // doesn't work??
 			for (int i = 0; i < size; i++) {
 				cells.Add(new Cell(Cell.State.Ship));
 			}

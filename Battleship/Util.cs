@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using yakkudev.Collections;
 
 namespace Battleship {
 	internal static class Util {
@@ -27,7 +28,6 @@ namespace Battleship {
 
 		}
 
-
 		public static char GetLetter(int index) {
 			return (char)('a' + index);
 		}
@@ -36,7 +36,7 @@ namespace Battleship {
 			return letter - 'a';
 		}
 
-		public static readonly Dictionary<char, ConsoleColor> colorMap = new Dictionary<char, ConsoleColor> {
+		public static readonly Map<char, ConsoleColor> colorMap = new Map<char, ConsoleColor> {
 			{'0', ConsoleColor.Black},
 			{'1', ConsoleColor.DarkBlue},
 			{'2', ConsoleColor.DarkGreen},
@@ -57,11 +57,16 @@ namespace Battleship {
 		};
 
 		public static ConsoleColor? GetConsoleColor(char c) {
-			if (colorMap.ContainsKey(c)) {
-				return colorMap[c];
+			if (colorMap.TryGetForward(c, out ConsoleColor col)) {
+				return col;
 			}
 			if (c == 'r') return ConsoleColor.Black; // Reset
 			return null;
+		}
+
+		public static char GetColorKey(ConsoleColor col) {
+			colorMap.TryGetReverse(col, out char c);
+			return c;
 		}
 
 		public static void WriteColored(string text) {
@@ -95,12 +100,8 @@ namespace Battleship {
 						i++;
 						continue;
 					}
-
-
 				}
-
 				Program.sw.Write(text[i]);
-
 			}
 			Program.sw.Flush();
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Battleship {
+namespace yakkudev.Collections {
 	public struct Vec {
 		public int x, y;
 

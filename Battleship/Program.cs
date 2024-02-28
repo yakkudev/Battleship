@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using yakkudev.Collections;
 
 namespace Battleship {
 	internal class Program {
@@ -34,7 +35,7 @@ namespace Battleship {
 			}
 
 			// Show ghost ship
-			int currentSize = 2;
+			int currentSize = 5;
 			var ghostShip = new Ship(cursor, currentSize, cursorDir);
 			board.ClearHighlights();
 			ghostShip.GetCellPositions().ForEach((Vec v) => {
@@ -72,7 +73,6 @@ namespace Battleship {
 			sw.Flush();
 
 			var cursorDir = Vec.Right;
-
 			do {
 				key = Play(currentBoard, ref cursor, ref cursorDir);
 

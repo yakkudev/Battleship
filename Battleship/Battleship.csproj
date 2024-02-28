@@ -53,7 +53,8 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="Vec.cs" />
+    <Compile Include="yakkudev\Collections\Map.cs" />
+    <Compile Include="yakkudev\Collections\Vec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
