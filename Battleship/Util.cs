@@ -76,6 +76,7 @@ namespace Battleship {
 				// Return at end of string
 				if (i + 2 > text.Length) {
 					Console.Write(text[i]);
+					Program.sw.Flush();
 					return;
 				}
 
@@ -85,10 +86,6 @@ namespace Battleship {
 					Program.sw.Flush();
 					if (text[i] == '&') {
 						Console.ForegroundColor = (ConsoleColor)col;
-						if (text[i + 1] == 'r') { // Reset color
-							Console.ForegroundColor = ConsoleColor.White;
-							Console.BackgroundColor = ConsoleColor.Black;
-						}
 						i++;
 						continue;
 					} else if (text[i] == '%') {
@@ -101,9 +98,45 @@ namespace Battleship {
 						continue;
 					}
 				}
-				Program.sw.Write(text[i]);
+				Console.Write(text[i]);
 			}
 			Program.sw.Flush();
 		}
+
+		public static void WriteColoredAt(int x, int y, string text) {
+			Vec original = new Vec(Console.CursorLeft, Console.CursorTop);
+			Console.SetCursorPosition(x, y);
+			WriteColored(text);
+			Console.SetCursorPosition(original.x, original.y);
+		}
+
+		public static void WriteColoredFormat(string text, Object obj) {
+			WriteColored(String.Format(text, obj));
+		}
+
+		public enum Messages {
+			None,
+			PlaceShip,
+			InvalidPos,
+			Shoot,
+			Hit,
+			Sunk,
+			Miss,
+			Turn,
+			Confirm
+		}
+
+		public static readonly Dictionary<Messages, string> messageMap = new Dictionary<Messages, string> {
+			// TODO: FIX
+			{ Messages.None, "" },
+			{ Messages.PlaceShip, "Place your ship! Size: {0}" },
+			{ Messages.InvalidPos, "&4Invalid position." },
+			{ Messages.Shoot, "Pick a place to shoot." },
+			{ Messages.Hit, "&2Hit!" },
+			{ Messages.Sunk, "&aHit! Ship was sunk." },
+			{ Messages.Miss, "&cMiss!" },
+			{ Messages.Turn, "{0}'s turn." },
+			{ Messages.Confirm, "Press &e[action]%r to confirm." },
+		};
 	}
 }

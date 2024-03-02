@@ -9,31 +9,29 @@ namespace Battleship {
 
 		public Player player;
 		Cell[,] cells = new Cell[height, width];
-		List<Ship> ships = new List<Ship>();
+		public List<Ship> ships = new List<Ship>();
 
 		List<Vec> highlights = new List<Vec>();
 
 		public void Print() {
 			var str = new StringBuilder(" ");
-			//char color = (char)player.color; // TODO: get player color
-			char color = 'b';
+			char color = Util.GetColorKey(player.color);
 
 			// Write row of letter coordinates
 			for (int i = 0; i < width; i++) {
 				str.Append($" %{color}&0{Util.GetLetter(i)}");
 			}
 
-			str.Append("\n&r");
+			str.Append("\n%r");
 
 			for (int y = 0; y < height; y++) {
 				// Write a coordinate number
-				str.Append($"%{color}&0{y} &r");
+				str.Append($"%{color}&0{y} %r");
 				for (int x = 0; x < width; x++) {
 					str.Append($"{CellAt(x, y).GetRender()} ");
 				}
 				str.Append("\n");
 			}
-
 			Util.WriteColored(str.ToString());
 		}
 
@@ -84,7 +82,7 @@ namespace Battleship {
 			return true;
 		}
 
-		public bool IsPositionTouching(Vec v) {
+		public bool IsPositionColliding(Vec v) {
 			if (!IsPosOnBoard(v)) return false;
 			if (CellAt(v.x, v.y).state != Cell.State.None) return true;
 			return false;
@@ -93,14 +91,13 @@ namespace Battleship {
 		public bool AddShip(Ship s) {
 			var positions = s.GetCellPositions();
 			foreach (var pos in positions) {
-				if (!IsPosOnBoard(pos))
+				if (!IsPosOnBoard(pos) || IsPositionColliding(pos))
 					return false;
-
-				// See if any surrounding cells are touching a ship
-				foreach (var v in Util.GetSurrounding(positions)) {
-					if (IsPositionTouching(v))
-						return false;
-				}
+			}
+			// See if any surrounding cells are touching a ship
+			foreach (var v in Util.GetSurrounding(positions)) {
+				if (IsPositionColliding(v))
+					return false;
 			}
 			ships.Add(s);
 			return true;
