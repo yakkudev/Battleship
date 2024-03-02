@@ -12,15 +12,12 @@ namespace Battleship {
 			private set { }
 		}
 
-		public bool IsSunken {
-			get {
-				int c = Size;
-				foreach (var cell in cells) {
-					if (cell.state == Cell.State.Ship) c--;
-				}
-				return c <= 0;
+		public bool IsSunken() {
+			int c = Size;
+			foreach (var cell in cells) {
+				if (cell.state == Cell.State.Ship) c--;
 			}
-			private set { }
+			return c == Size;
 		}
 
 
@@ -45,19 +42,27 @@ namespace Battleship {
 			return cells[index];
 		}
 
+
+
+		// RIP 
+		//public bool ContainsPos(Vec pos) {
+		//	Vec diff = pos - origin;
+		//	// Check if X or Y is the same
+		//	if (diff.x != 0 && diff.y != 0) return false;
+		//	/*
+		//	 * If distance between points is greater after a step in ship's orientation,
+		//	 * it means that ship absolutely cannot contain pos 
+		//	 */
+		//	if (Vec.Distance(origin + direction, pos) > Vec.Distance(origin, pos)) return false;
+		//	// Cast to int is required due to double imprecision
+		//	if ((int)Vec.Distance(origin, pos) > cells.Count - 1) return false;
+		//	return true;
+		//}
+
 		public bool ContainsPos(Vec pos) {
-			Vec diff = pos - origin;
-			// Check if X or Y is the same
-			if (diff.x != 0 && diff.y != 0) return false;
-			/*
-			 * If distance between points is greater after a step in ship's orientation,
-			 * it means that ship absolutely cannot contain pos 
-			 */
-			if (Vec.Distance(origin + direction, pos) > Vec.Distance(origin, pos)) return false;
-			// Cast to int is required due to double imprecision
-			if ((int)Vec.Distance(origin, pos) > cells.Count - 1) return false;
-			return true;
+			return GetCellPositions().Contains(pos);
 		}
+
 
 		public Cell TryGetCellAt(Vec pos) {
 			if (!ContainsPos(pos)) return null;

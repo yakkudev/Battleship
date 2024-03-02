@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using yakkudev.Collections;
 
@@ -29,12 +30,13 @@ namespace Battleship {
 				str.Append($"%{color}&0{y} %r");
 				for (int x = 0; x < width; x++) {
 					// Display normally
-					if (!shotsAndMisses) str.Append(CellAt(x, y).GetRender());
+					var c = CellAt(x, y);
+					if (!shotsAndMisses) str.Append(c.GetRender());
 					else { // This is where the magic happens
-						if (CellAt(x, y).state == Cell.State.Ship)
-							str.Append(Cell.GetRender(Cell.State.None));
+						if (c.state == Cell.State.Ship)
+							str.Append(Cell.GetRender(Cell.State.None, c.isHighlighted));
 						else
-							str.Append(CellAt(x, y).GetRender());
+							str.Append(c.GetRender());
 					}
 				}
 				str.Append("\n");
@@ -65,12 +67,13 @@ namespace Battleship {
 				cell.state = Cell.State.Shot;
 
 				foreach (var s in ships) {
-					if (s.ContainsPos(v) && s.IsSunken) {
+					if (s.ContainsPos(v) && s.IsSunken()) {
 						s.Sink();
 						var surrounding = new List<Vec>();
 						surrounding.AddRange(
 							Util.GetSurrounding(s.GetCellPositions())
 						);
+						surrounding = surrounding.Except(s.GetCellPositions()).ToList();
 						// TODO: may break some things
 						surrounding.ForEach(v => {
 							if (IsPosOnBoard(v))

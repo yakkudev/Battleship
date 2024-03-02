@@ -16,10 +16,10 @@ namespace Battleship {
 		public State state = State.None;
 
 		public Cell() { }
-		public Cell(State state) { this.state = state; }
+		public Cell(State state, bool isHighlighted = false) { this.state = state; this.isHighlighted = isHighlighted; }
 
-		public static string GetRender(State s) {
-			return new Cell(s).GetRender();
+		public static string GetRender(State s, bool isHighlighted = false) {
+			return new Cell(s, isHighlighted).GetRender();
 		}
 
 
@@ -27,12 +27,12 @@ namespace Battleship {
 		// The render value is a string after adding features like highlighting and state
 		public string GetRender() {
 			var str = new StringBuilder("");
-			// Colors
 			if (isHighlighted) {
-				str.Append("%f&0");
+				str.Append("%a&0");
 			} else {
 				str.Append(state switch {
-					State.Sunk => "%0&7",
+					State.Sunk => "%7&0",
+					State.Missed => "%8&f",
 					State.Shot => "%c&0",
 					_ => "",
 				});

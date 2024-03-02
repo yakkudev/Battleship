@@ -54,7 +54,7 @@ namespace Battleship {
 		static void UpdateMessage() {
 			msg = gameState switch {
 				State.Placing => Util.Messages.PlaceShip,
-
+				State.Shooting => Util.Messages.Shoot,
 				_ => msg
 			};
 		}
@@ -106,8 +106,10 @@ namespace Battleship {
 
 				// Print board
 				Console.Clear();
-				currentBoard.Print();
-
+				if (gameState != State.Shooting)
+					currentBoard.Print();
+				else
+					currentBoard.Print(true);
 				// Write message
 				Console.WriteLine();
 				Util.messageMap.TryGetValue(msg, out string msgValue);
@@ -123,6 +125,9 @@ namespace Battleship {
 				Util.WriteColoredAt(xOffset, 3, "&8Rotate: &e[r]%r");
 				if (gameState == State.Placing) Util.WriteColoredAt(xOffset, 4, "&8Random: &e[q]%r");
 				Util.WriteColoredAt(xOffset, 6, "&8Stop game: &e[x]%r");
+
+				// Define other board
+				var other = GetOtherBoard(currentBoard, board1, board2);
 
 				// Evaluate ship size
 				var cursorSize = 1;
@@ -190,7 +195,6 @@ namespace Battleship {
 					}
 
 					if (gameState == State.Shooting) {
-						var other = GetOtherBoard(currentBoard, board1, board2);
 						if (currentBoard.CellAt(cursor).state == Cell.State.Shot ||
 							currentBoard.CellAt(cursor).state == Cell.State.Sunk ||
 							!currentBoard.IsPosOnBoard(cursor)
@@ -199,6 +203,8 @@ namespace Battleship {
 							break;
 						}
 						bool hit = currentBoard.ShootAt(cursor);
+						other.player.lastWasHit = hit;
+						msg = (hit) ? Util.Messages.Hit : Util.Messages.Miss;
 					}
 				} while (false);
 

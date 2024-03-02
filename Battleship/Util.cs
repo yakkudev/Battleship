@@ -120,7 +120,6 @@ namespace Battleship {
 			InvalidPos,
 			Shoot,
 			Hit,
-			Sunk,
 			Miss,
 			Turn,
 			Confirm
@@ -133,7 +132,6 @@ namespace Battleship {
 			{ Messages.InvalidPos, "&4Invalid position." },
 			{ Messages.Shoot, "Pick a place to shoot." },
 			{ Messages.Hit, "&2Hit!" },
-			{ Messages.Sunk, "&aHit! Ship was sunk." },
 			{ Messages.Miss, "&cMiss!" },
 			{ Messages.Turn, "{0}'s turn." },
 			{ Messages.Confirm, "Press &e[action]%r to confirm." },

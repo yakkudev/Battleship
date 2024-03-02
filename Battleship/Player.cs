@@ -4,6 +4,7 @@ namespace Battleship {
 	internal class Player {
 		public string name;
 		public ConsoleColor color;
+		public bool lastWasHit;
 
 		public int wins;
 
