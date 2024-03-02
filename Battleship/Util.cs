@@ -13,6 +13,11 @@ namespace Battleship {
 			Vec.Up + Vec.Left,
 			Vec.Up + Vec.Right,
 		};
+
+		static readonly Vec[] surroundingAAOffsets = {
+			Vec.Down, Vec.Up, Vec.Left, Vec.Right,
+		};
+
 		public static List<Vec> GetSurrounding(List<Vec> obj, bool doTrim = false) {
 			var positions = new List<Vec>();
 			foreach (var o in obj) {
@@ -25,7 +30,20 @@ namespace Battleship {
 			}
 
 			return positions;
+		}
 
+		public static List<Vec> GetSurroundingAA(List<Vec> obj, bool doTrim = false) {
+			var positions = new List<Vec>();
+			foreach (var o in obj) {
+				foreach (var offset in surroundingAAOffsets) {
+					positions.Add(o + offset);
+				}
+			}
+			if (doTrim) {
+				positions = positions.Distinct().ToList();
+			}
+
+			return positions;
 		}
 
 		public static char GetLetter(int index) {

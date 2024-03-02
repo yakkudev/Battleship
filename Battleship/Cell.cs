@@ -34,6 +34,7 @@ namespace Battleship {
 					State.Sunk => "%7&0",
 					State.Missed => "%8&f",
 					State.Shot => "%c&0",
+					State.Ship => "%0&a",
 					_ => "",
 				});
 			}

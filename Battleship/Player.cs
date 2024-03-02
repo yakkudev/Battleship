@@ -18,6 +18,12 @@ namespace Battleship {
 			shipSetup.CopyTo(shipsToPlace, 0);
 		}
 
+		public void Reset() {
+			shipsToPlace = new int[shipSetup.Length];
+			shipSetup.CopyTo(shipsToPlace, 0);
+			lastWasHit = false;
+		}
+
 		public int FirstAvailableShip() {
 			int ret = -1;
 			for (int i = 0; i < shipsToPlace.Length; i++) {
