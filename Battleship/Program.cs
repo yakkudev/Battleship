@@ -10,6 +10,7 @@ namespace Battleship {
 		static Util.Messages msg;
 		static State gameState;
 		static Board boardDefer = null;
+		static Random rng = new Random();
 
 		static void CursorMove(Board board, ConsoleKey key, int cursorSize, ref Vec cursor, ref Vec cursorDir) {
 			board.CellAt(cursor).isHighlighted = false;
@@ -120,7 +121,8 @@ namespace Battleship {
 				Util.WriteColoredAt(xOffset, 1, "&8Move cursor: &e[arrow keys]%r");
 				Util.WriteColoredAt(xOffset, 2, "&8Action: &e[space]%r");
 				Util.WriteColoredAt(xOffset, 3, "&8Rotate: &e[r]%r");
-				Util.WriteColoredAt(xOffset, 5, "&8Stop game: &e[x]%r");
+				if (gameState == State.Placing) Util.WriteColoredAt(xOffset, 4, "&8Random: &e[q]%r");
+				Util.WriteColoredAt(xOffset, 6, "&8Stop game: &e[x]%r");
 
 				// Evaluate ship size
 				var cursorSize = 1;
@@ -144,6 +146,28 @@ namespace Battleship {
 						requireConfirmation = false;
 						UpdateMessage();
 						break;
+					}
+
+					// Random ship setup
+					if (key == ConsoleKey.Q && gameState == State.Placing) {
+						while (currentBoard.player.FirstAvailableShip() != -1) {
+							var pos = new Vec(
+								rng.Next(0, Board.width),
+								rng.Next(0, Board.height)
+							);
+							var dir = Vec.Right;
+							for (int i = 0; i < rng.Next(0, 4); i++) {
+								dir = Vec.RotateAA(dir);
+							}
+
+							int size = currentBoard.player.FirstAvailableShip();
+
+							if (currentBoard.AddShip(new Ship(pos, size, dir))) {
+								msg = Util.Messages.PlaceShip;
+								currentBoard.player.shipsToPlace[size - 1]--;
+								currentBoard.BuildCells();
+							}
+						}
 					}
 
 					// Cursor Move
