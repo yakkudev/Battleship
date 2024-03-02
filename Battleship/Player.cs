@@ -6,13 +6,16 @@ namespace Battleship {
 		public ConsoleColor color;
 		public bool lastWasHit;
 
-		public int wins;
+		public int wins = 0;
 
-		public int[] shipsToPlace = { 4, 3, 2, 1 };
+		public static readonly int[] shipSetup = { 4, 3, 2, 1 };
+
+		public int[] shipsToPlace = new int[shipSetup.Length];
 
 		public Player(string name, ConsoleColor color) {
 			this.name = name;
 			this.color = color;
+			shipSetup.CopyTo(shipsToPlace, 0);
 		}
 
 		public int FirstAvailableShip() {

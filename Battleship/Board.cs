@@ -52,6 +52,13 @@ namespace Battleship {
 			}
 		}
 
+		public bool HasLost() {
+			foreach (var ship in ships) {
+				if (!ship.IsSunken()) return false;
+			}
+			return true;
+		}
+
 		public Cell CellAt(int x, int y) {
 			return cells[y, x];
 		}

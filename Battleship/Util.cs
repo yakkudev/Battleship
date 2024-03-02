@@ -121,19 +121,17 @@ namespace Battleship {
 			Shoot,
 			Hit,
 			Miss,
-			Turn,
-			Confirm
+			Confirm,
 		}
 
 		public static readonly Dictionary<Messages, string> messageMap = new Dictionary<Messages, string> {
 			// TODO: FIX
 			{ Messages.None, "" },
-			{ Messages.PlaceShip, "Place your ship! Size: {0}" },
+			{ Messages.PlaceShip, "Place your ships!" },
 			{ Messages.InvalidPos, "&4Invalid position." },
 			{ Messages.Shoot, "Pick a place to shoot." },
-			{ Messages.Hit, "&2Hit!" },
-			{ Messages.Miss, "&cMiss!" },
-			{ Messages.Turn, "{0}'s turn." },
+			{ Messages.Hit, "&2Hit! You get another turn." },
+			{ Messages.Miss, "&cMiss! Press &e[action]&c to continue." },
 			{ Messages.Confirm, "Press &e[action]%r to confirm." },
 		};
 	}
