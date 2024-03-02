@@ -58,6 +58,12 @@ namespace Battleship {
 			};
 		}
 
+		static Board GetOtherBoard(Board currentBoard, Board board1, Board board2) {
+			if (currentBoard == board1) return board2;
+			if (currentBoard == board2) return board1;
+			return null;
+		}
+
 		static void Main(string[] args) {
 			// TODO: https://stackoverflow.com/questions/37769194/modify-command-line-arguments-before-application-restart
 			// Restart application and count wins with arguments
@@ -117,23 +123,21 @@ namespace Battleship {
 				Util.WriteColoredAt(xOffset, 5, "&8Stop game: &e[x]%r");
 
 				// Evaluate ship size
-				var cursorSize = -1;
+				var cursorSize = 1;
 				if (gameState == State.Placing) {
 					cursorSize = currentBoard.player.FirstAvailableShip();
 					if (cursorSize == -1) {
 						msg = Util.Messages.Confirm;
 						requireConfirmation = true;
-						if (currentBoard == board1)
-							boardDefer = board2;
-						else if (currentBoard == board2) {
+						boardDefer = GetOtherBoard(currentBoard, board1, board2);
+						if (currentBoard == board2) {
 							// TODO: Change game state here
 							gameState = State.Shooting;
-							boardDefer = board1;
 						}
 					}
-				}
+				} else if (gameState == State.Shooting) { }
 
-				// Cursor Move
+
 				key = Console.ReadKey(true).Key;
 				do {
 					if (requireConfirmation && key == ConsoleKey.Spacebar) {
@@ -142,11 +146,14 @@ namespace Battleship {
 						break;
 					}
 
+					// Cursor Move
 					if (key != ConsoleKey.Spacebar) {
 						CursorMove(currentBoard, key, cursorSize, ref cursor, ref cursorDir);
 						break;
 					}
 
+					// Action
+					// =====
 					if (gameState == State.Placing) {
 						if (currentBoard.AddShip(new Ship(cursor, cursorSize, cursorDir))) {
 							msg = Util.Messages.PlaceShip;
@@ -155,9 +162,22 @@ namespace Battleship {
 						} else {
 							msg = Util.Messages.InvalidPos;
 						}
+						break;
+					}
 
+					if (gameState == State.Shooting) {
+						var other = GetOtherBoard(currentBoard, board1, board2);
+						if (currentBoard.CellAt(cursor).state == Cell.State.Shot ||
+							currentBoard.CellAt(cursor).state == Cell.State.Sunk ||
+							!currentBoard.IsPosOnBoard(cursor)
+						) {
+							msg = Util.Messages.InvalidPos;
+							break;
+						}
+						bool hit = currentBoard.ShootAt(cursor);
 					}
 				} while (false);
+
 
 				// Limit how fast the user can press keys
 				// Makes printing look less slow

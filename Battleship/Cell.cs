@@ -18,6 +18,10 @@ namespace Battleship {
 		public Cell() { }
 		public Cell(State state) { this.state = state; }
 
+		public static string GetRender(State s) {
+			return new Cell(s).GetRender();
+		}
+
 
 
 		// The render value is a string after adding features like highlighting and state
@@ -33,10 +37,10 @@ namespace Battleship {
 					_ => "",
 				});
 			}
-			
+
 			// Character (icon)
 			str.Append((char)state);
-			str.Append("%r");
+			str.Append("%r ");
 			return str.ToString();
 		}
 	}

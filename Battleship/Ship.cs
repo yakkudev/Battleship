@@ -13,7 +13,13 @@ namespace Battleship {
 		}
 
 		public bool IsSunken {
-			get { return Size > 0; }
+			get {
+				int c = Size;
+				foreach (var cell in cells) {
+					if (cell.state == Cell.State.Ship) c--;
+				}
+				return c <= 0;
+			}
 			private set { }
 		}
 
@@ -24,6 +30,12 @@ namespace Battleship {
 			}
 			this.origin = origin;
 			this.direction = direction;
+		}
+
+		public void Sink() {
+			cells.ForEach(cell => {
+				cell.state = Cell.State.Sunk;
+			});
 		}
 
 		public Cell GetCell(int index) {

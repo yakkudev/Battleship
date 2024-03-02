@@ -13,7 +13,7 @@ namespace Battleship {
 
 		List<Vec> highlights = new List<Vec>();
 
-		public void Print() {
+		public void Print(bool shotsAndMisses = false) {
 			var str = new StringBuilder(" ");
 			char color = Util.GetColorKey(player.color);
 
@@ -28,7 +28,14 @@ namespace Battleship {
 				// Write a coordinate number
 				str.Append($"%{color}&0{y} %r");
 				for (int x = 0; x < width; x++) {
-					str.Append($"{CellAt(x, y).GetRender()} ");
+					// Display normally
+					if (!shotsAndMisses) str.Append(CellAt(x, y).GetRender());
+					else { // This is where the magic happens
+						if (CellAt(x, y).state == Cell.State.Ship)
+							str.Append(Cell.GetRender(Cell.State.None));
+						else
+							str.Append(CellAt(x, y).GetRender());
+					}
 				}
 				str.Append("\n");
 			}
@@ -49,6 +56,33 @@ namespace Battleship {
 
 		public Cell CellAt(Vec v) {
 			return CellAt(v.x, v.y);
+		}
+
+		public bool ShootAt(Vec v) {
+
+			var cell = CellAt(v);
+			if (cell.state == Cell.State.Ship) {
+				cell.state = Cell.State.Shot;
+
+				foreach (var s in ships) {
+					if (s.ContainsPos(v) && s.IsSunken) {
+						s.Sink();
+						var surrounding = new List<Vec>();
+						surrounding.AddRange(
+							Util.GetSurrounding(s.GetCellPositions())
+						);
+						// TODO: may break some things
+						surrounding.ForEach(v => {
+							if (IsPosOnBoard(v))
+								CellAt(v).state = Cell.State.Missed;
+						});
+						break;
+					}
+				}
+				return true;
+			}
+			cell.state = Cell.State.Missed;
+			return false;
 		}
 
 		public void BuildCells() {

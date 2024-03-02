@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using yakkudev.Collections;
 
 namespace Battleship {
 	internal class Player {
 		public string name;
 		public ConsoleColor color;
-		public List<Vec> moves;
 
 		public int wins;
 
